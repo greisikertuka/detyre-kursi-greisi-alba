@@ -1,7 +1,5 @@
 <%@ page import="java.util.Objects" %>
-<%@ page import="com.example.detyrekursigreisialba.model.enums.UserRole" %>
 <%@ include file="common.jsp" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     session = request.getSession();
@@ -56,6 +54,6 @@
                 <div class="error-message" style="color: red;">${requestScope.registerError}</div>
             </c:if>
         </div>
-        <button type="submit" class="btn btn-primary">Update Profile</button>
+        <button type="submit" class="btn btn-dark">Update Profile</button>
     </form>
 </div>

@@ -3,7 +3,6 @@
 <%@ page import="com.example.detyrekursigreisialba.model.Quiz" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.detyrekursigreisialba.service.QuizService" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
@@ -45,7 +44,7 @@
                          alt=""/>
                 </div>
                 <br>
-                <a class="btn btn-primary" href="quiz.jsp?selectedQuizId=<%=quiz.getId()%>"><%= quiz.getName() %>
+                <a class="btn btn-dark" href="quiz.jsp?selectedQuizId=<%=quiz.getId()%>">Start Quiz
                 </a>
             </div>
         </div>

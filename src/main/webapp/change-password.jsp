@@ -1,6 +1,5 @@
 <%@ page import="java.util.Objects" %>
 <%@ include file="common.jsp" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     session = request.getSession();
@@ -75,7 +74,7 @@
             <div id="confirmPasswordError" style="color: red;"></div>
         </div>
         <div id="error" style="color: red;"></div>
-        <button type="submit" class="btn btn-primary">Update Profile</button>
+        <button type="submit" class="btn btn-dark">Update Profile</button>
         <br>
     </form>
     <c:if test="${not empty requestScope.error}">

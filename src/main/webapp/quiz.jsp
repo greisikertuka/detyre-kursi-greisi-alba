@@ -3,7 +3,6 @@
 <%@ page import="com.example.detyrekursigreisialba.service.QuizService" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Objects" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     session = request.getSession();
@@ -44,7 +43,7 @@
             <br><br>
         </c:forEach>
         <div>
-            <button type="submit" class="btn btn-primary">Finish Quiz</button>
+            <button type="submit" class="btn btn-dark">Finish Quiz</button>
         </div>
     </form>
 </div>

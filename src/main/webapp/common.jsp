@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     session = request.getSession();
-    boolean loggedIn = Objects.isNull(session.getAttribute("username"));
+    boolean loggedOut = Objects.isNull(session.getAttribute("username"));
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,10 +18,10 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<header class="bg-light p-3">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<header class="bg-dark p-2">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <a class="navbar-brand" href="dashboard.jsp">Quizzes Online</a>
-        <%if (loggedIn) { %>
+        <%if (!loggedOut) { %>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="profile.jsp"><i class="fas fa-user"></i> Profile</a>
@@ -31,7 +31,7 @@
             </li>
         </ul>
         <%}%>
-        <%if (!loggedIn) { %>
+        <%if (loggedOut) { %>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="login.jsp"><i class="fas fa-sign-in-alt"></i> Log In</a>
@@ -41,12 +41,9 @@
             </li>
         </ul>
         <%}%>
-
     </nav>
 </header>
 <div class="card">
-    <div class="card-body">
-    </div>
 </div>
 </body>
 </html>
