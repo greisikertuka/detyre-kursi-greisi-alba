@@ -5,14 +5,12 @@
 <%@ page import="java.util.Objects" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <%
     session = request.getSession();
     String username = (String) session.getAttribute("username");
     if (Objects.isNull(username)) {
         response.sendRedirect("index.jsp");
     }
-
     QuizService quizService = new QuizService();
     int selectedQuizId = -1;
     if (request.getParameter("selectedQuizId") != null) {
