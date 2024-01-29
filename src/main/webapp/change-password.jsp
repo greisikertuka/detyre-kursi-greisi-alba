@@ -13,9 +13,8 @@
 <script>
     function validateForm() {
         const password = document.getElementById("password").value;
-        const newPassword = document.getElementById("confirmPassword").value;
+        const newPassword = document.getElementById("newPassword").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
-
         if (password.length < 8) {
             document.getElementById("passwordError").innerHTML = "Password must be at least 8 characters.";
             return false;
@@ -46,7 +45,7 @@
         } else {
             document.getElementById("confirmPasswordError").innerHTML = "";
         }
-        if (!newPassword.equals(confirmPassword)) {
+        if (newPassword !== confirmPassword) {
             document.getElementById("error").innerHTML = "Passwords should match!";
             return false;
         } else {
@@ -77,9 +76,9 @@
         </div>
         <div id="error" style="color: red;"></div>
         <button type="submit" class="btn btn-primary">Update Profile</button>
+        <br>
     </form>
     <c:if test="${not empty requestScope.error}">
         <div class="error-message" style="color: red;">${requestScope.error}</div>
     </c:if>
-
 </div>

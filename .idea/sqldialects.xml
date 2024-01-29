@@ -5,5 +5,7 @@
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/detyrekursigreisialba/ProfileServlet.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/detyrekursigreisialba/service/QuizService.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/detyrekursigreisialba/service/UserService.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/postgresql-scripts/script.sql" dialect="PostgreSQL" />
+    <file url="PROJECT" dialect="PostgreSQL" />
   </component>
 </project>

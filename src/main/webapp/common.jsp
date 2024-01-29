@@ -1,3 +1,10 @@
+<%@ page import="java.util.Objects" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    session = request.getSession();
+    boolean loggedIn = Objects.isNull(session.getAttribute("username"));
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,14 +21,27 @@
 <header class="bg-light p-3">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="dashboard.jsp">Quizzes Online</a>
+        <%if (loggedIn) { %>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="profile.jsp"><i class="fas fa-user"></i> Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="logout.jsp"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                <a class="nav-link" href="logout"><i class="fas fa-sign-out-alt"></i> Log Out</a>
             </li>
         </ul>
+        <%}%>
+        <%if (!loggedIn) { %>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="login.jsp"><i class="fas fa-sign-in-alt"></i> Log In</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="register.jsp"><i class="fas fa-user"></i> Register</a>
+            </li>
+        </ul>
+        <%}%>
+
     </nav>
 </header>
 <div class="card">

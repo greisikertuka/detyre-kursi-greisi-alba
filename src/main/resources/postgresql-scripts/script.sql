@@ -1,3 +1,4 @@
+CREATE DATABASE java_ee_database;
 CREATE TABLE USERS
 (
     id       SERIAL PRIMARY KEY,
@@ -8,8 +9,10 @@ CREATE TABLE USERS
 );
 CREATE TABLE QUIZZES
 (
-    id   SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    image_url   VARCHAR(255)
 );
 
 CREATE TABLE QUESTIONS
@@ -24,6 +27,7 @@ CREATE TABLE OPTIONS
 (
     id          SERIAL PRIMARY KEY,
     question_id INTEGER REFERENCES QUESTIONS (id) NOT NULL,
+    index       INTEGER                           NOT NULL,
     value       VARCHAR(255)                      NOT NULL,
     is_answer   BOOLEAN                           NOT NULL
 );

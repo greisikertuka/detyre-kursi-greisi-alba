@@ -3,12 +3,14 @@ package com.example.detyrekursigreisialba.model;
 public class Option {
     private int id;
     private int questionId;
+    private int index;
     private String value;
     private boolean isAnswer;
 
-    public Option(int id, int questionId, String value, boolean isAnswer) {
+    public Option(int id, int questionId, int index, String value, boolean isAnswer) {
         this.id = id;
         this.questionId = questionId;
+        this.index = index;
         this.value = value;
         this.isAnswer = isAnswer;
     }
@@ -46,5 +48,13 @@ public class Option {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

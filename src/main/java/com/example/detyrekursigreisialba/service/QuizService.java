@@ -24,6 +24,8 @@ public class QuizService {
                 Quiz quiz = new Quiz();
                 quiz.setId(resultSet.getInt("id"));
                 quiz.setName(resultSet.getString("name"));
+                quiz.setDescription(resultSet.getString("description"));
+                quiz.setImage_url(resultSet.getString("image_url"));
                 quizzes.add(quiz);
             }
 
@@ -32,6 +34,27 @@ public class QuizService {
         }
 
         return quizzes;
+    }
+
+    public int createQuiz(String quizName, String description, String imageURL) {
+        int generatedResultId = -1;
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO quizzes (name, description, image_url) VALUES (?, ?, ?)",
+                     Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, quizName);
+            preparedStatement.setString(2, description);
+            preparedStatement.setString(3, imageURL);
+            preparedStatement.executeUpdate();
+
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                generatedResultId = generatedKeys.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return generatedResultId;
     }
 
     public List<Question> getQuestionsWithOptions(int quizId) {
@@ -82,7 +105,8 @@ public class QuizService {
                     int id = resultSet.getInt("id");
                     String value = resultSet.getString("value");
                     boolean isAnswer = resultSet.getBoolean("is_answer");
-                    options.add(new Option(id, questionId, value, isAnswer));
+                    int index = resultSet.getInt("index");
+                    options.add(new Option(id, questionId, index, value, isAnswer));
                 }
             }
         } catch (SQLException e) {
@@ -133,12 +157,64 @@ public class QuizService {
         }
     }
 
-    public int findCorrectOptionId(List<Option> options) {
-        for (Option option : options) {
-            if (option.isCorrectAnswer()) {
-                return option.getId();
+    public List<Question> initializeQuestions(int questionsCount, int optionsCount) {
+        List<Question> questions = new ArrayList<>();
+        for (int index = 0; index < questionsCount; index++) {
+            Question question = new Question();
+            List<Option> options = new ArrayList<>();
+            for (int optionIndex = 0; optionIndex < optionsCount; optionIndex++) {
+                Option option = new Option();
+                option.setIndex(optionIndex + 1);
+                options.add(option);
             }
+            question.setIndex(index + 1);
+            question.setOptions(options);
+            questions.add(question);
         }
-        return -1;
+        return questions;
+    }
+
+    public void saveQuestions(int quizId, List<Question> questions) {
+        for (Question question : questions) {
+            insertQuestionWithOptions(quizId, question);
+        }
+    }
+
+    private void insertQuestionWithOptions(int quizId, Question question) {
+        int generatedResultId = -1;
+        try (Connection connection = DatabaseManager.getConnection()) {
+            String sql = "INSERT INTO questions (quiz_id, index, name) VALUES (?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql,
+                    Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, quizId);
+            statement.setInt(2, question.getIndex());
+            statement.setString(3, question.getName());
+            statement.addBatch();
+            statement.executeBatch();
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                generatedResultId = generatedKeys.getInt(1);
+            }
+            insertOptionsForQuestion(generatedResultId, question.getOptions());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void insertOptionsForQuestion(int question_id, List<Option> options) {
+        try (Connection connection = DatabaseManager.getConnection()) {
+            String sql = "INSERT INTO options (question_id, value, is_answer) VALUES (?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (Option option : options) {
+                statement.setInt(1, question_id);
+                statement.setString(2, option.getValue());
+                statement.setBoolean(3, option.isCorrectAnswer());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -32,6 +32,10 @@ public class ProfileServlet extends HttpServlet {
         try {
             if (saveProfileChanges(id, newUser)) {
                 HttpSession session = request.getSession(true);
+                session.removeAttribute("id");
+                session.removeAttribute("username");
+                session.removeAttribute("email");
+                session.removeAttribute("role");
                 session.setAttribute("id", "" + id);
                 session.setAttribute("username", username);
                 session.setAttribute("email", email);
