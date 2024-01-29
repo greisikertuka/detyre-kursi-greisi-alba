@@ -28,7 +28,7 @@
     <h3>Quizzes</h3>
     <div>
         <%if ("ADMIN".equals(role)) { %>
-        <a href="add-quiz.jsp" class="btn btn-outline-primary">Add quiz</a>
+        <a href="add-quiz.jsp" class="btn btn-outline-dark">Add quiz</a>
         <%}%>
     </div>
     <div class="row">
