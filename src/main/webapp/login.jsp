@@ -43,6 +43,6 @@
             <input type="password" id="password" name="password" class="form-control" required>
             <div id="passwordError" style="color: red;"></div>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-dark">Login</button>
     </form>
 </div>

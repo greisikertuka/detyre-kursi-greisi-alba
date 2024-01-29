@@ -54,6 +54,6 @@
                 <div class="error-message" style="color: red;">${requestScope.registerError}</div>
             </c:if>
         </div>
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button type="submit" class="btn btn-dark">Register</button>
     </form>
 </div>

@@ -52,7 +52,7 @@
             <br><br>
         </c:forEach>
         <div>
-            <button type="submit" class="btn btn-primary">Save Questions</button>
+            <button type="submit" class="btn btn-dark">Save Questions</button>
         </div>
     </form>
 </div>

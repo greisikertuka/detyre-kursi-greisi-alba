@@ -35,6 +35,6 @@
             <label for="optionsCount" class="form-label">Number of options for questions:</label>
             <input type="number" id="optionsCount" name="optionsCount" class="form-control" required>
         </div>
-        <button type="submit" class="btn btn-primary mb-4">Save Quiz</button>
+        <button type="submit" class="btn btn-dark mb-4">Save Quiz</button>
     </form>
 </div>
