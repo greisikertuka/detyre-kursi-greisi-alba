@@ -1,17 +1,16 @@
 <%@ include file="common.jsp" %>
 <%@ page import="com.example.detyrekursigreisialba.model.Question" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Objects" %>
 <%@ page import="com.example.detyrekursigreisialba.service.QuizService" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
-    session = request.getSession();
-    String username = (String) session.getAttribute("username");
-    if (Objects.isNull(username)) {
+    String role = (String) session.getAttribute("role");
+    if (!loggedIn) {
         response.sendRedirect("index.jsp");
+    } else if (!role.equals("ADMIN")) {
+        response.sendRedirect("dashboard.jsp");
     }
-
     int quizId = Integer.parseInt(request.getParameter("quizId"));
     int questionsCount = Integer.parseInt(request.getParameter("questionsCount"));
     int optionsCount = Integer.parseInt(request.getParameter("optionsCount"));

@@ -1,5 +1,6 @@
 package com.example.detyrekursigreisialba.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class Result {
@@ -7,13 +8,25 @@ public class Result {
     private String username;
     private List<UserAnswer> userAnswers;
 
-    public Result(int quizId, String username, List<UserAnswer> answers) {
+    private Date timestamp;
+    private String quiz_name;
+
+    public Result(int quizId, String username, List<UserAnswer> answers, Date timestamp) {
         this.quizId = quizId;
         this.username = username;
         this.userAnswers = answers;
+        this.timestamp = timestamp;
     }
 
     public Result() {}
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public int getQuizId() {
         return quizId;
@@ -37,5 +50,13 @@ public class Result {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getQuizName() {
+        return quiz_name;
+    }
+
+    public void setQuizName(String quiz_name) {
+        this.quiz_name = quiz_name;
     }
 }

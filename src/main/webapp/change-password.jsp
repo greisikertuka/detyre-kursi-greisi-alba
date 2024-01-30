@@ -1,11 +1,8 @@
-<%@ page import="java.util.Objects" %>
 <%@ include file="common.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    session = request.getSession();
     String id = (String) session.getAttribute("id");
-    String username = (String) session.getAttribute("username");
-    if (Objects.isNull(username)) {
+    if (!loggedIn) {
         response.sendRedirect("index.jsp");
     }
 %>

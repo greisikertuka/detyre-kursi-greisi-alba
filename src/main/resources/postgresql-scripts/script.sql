@@ -36,7 +36,8 @@ CREATE TABLE RESULTS
 (
     id       SERIAL PRIMARY KEY,
     quiz_id  INTEGER REFERENCES QUIZZES (id) NOT NULL,
-    username VARCHAR(50)                     NOT NULL
+    username VARCHAR(50)                     NOT NULL,
+    timestamp    DATE NOT NULL
 );
 
 CREATE TABLE USER_ANSWERS

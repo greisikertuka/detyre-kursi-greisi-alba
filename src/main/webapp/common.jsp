@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     session = request.getSession();
-    boolean loggedOut = Objects.isNull(session.getAttribute("username"));
+    boolean loggedIn = !Objects.isNull(session.getAttribute("username"));
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +21,7 @@
 <header class="bg-dark p-2">
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <a class="navbar-brand" href="dashboard.jsp">Quizzes Online</a>
-        <%if (!loggedOut) { %>
+        <%if (loggedIn) { %>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="profile.jsp"><i class="fas fa-user"></i> Profile</a>
@@ -31,7 +31,7 @@
             </li>
         </ul>
         <%}%>
-        <%if (loggedOut) { %>
+        <%if (!loggedIn) { %>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="login.jsp"><i class="fas fa-sign-in-alt"></i> Log In</a>

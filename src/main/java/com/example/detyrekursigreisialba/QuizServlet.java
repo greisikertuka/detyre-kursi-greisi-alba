@@ -58,10 +58,10 @@ public class QuizServlet extends HttpServlet {
                 userAnswers.add(userAnswer);
             }
         }
-
-        if (userAnswers.size() > 0) {
-            quizService.saveUserQuizResults(result, userAnswers);
+        int resultId = 0;
+        if (!userAnswers.isEmpty()) {
+            resultId = quizService.saveUserQuizResults(result, userAnswers);
         }
-        response.sendRedirect("my-quizzes.jsp");
+        response.sendRedirect("quiz-results.jsp?resultId=" + resultId);
     }
 }

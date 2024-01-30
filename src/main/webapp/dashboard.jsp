@@ -1,15 +1,12 @@
 <%@ include file="common.jsp" %>
-<%@ page import="java.util.Objects" %>
 <%@ page import="com.example.detyrekursigreisialba.model.Quiz" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.detyrekursigreisialba.service.QuizService" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
-    session = request.getSession();
-    String username = (String) session.getAttribute("username");
     String role = (String) session.getAttribute("role");
-    if (Objects.isNull(username)) {
+    if (!loggedIn) {
         response.sendRedirect("index.jsp");
     }
 

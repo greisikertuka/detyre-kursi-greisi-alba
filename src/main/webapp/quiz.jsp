@@ -2,14 +2,12 @@
 <%@ page import="com.example.detyrekursigreisialba.model.Question" %>
 <%@ page import="com.example.detyrekursigreisialba.service.QuizService" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Objects" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    session = request.getSession();
-    String username = (String) session.getAttribute("username");
-    if (Objects.isNull(username)) {
+    if (!loggedIn) {
         response.sendRedirect("index.jsp");
     }
+    String username = (String) session.getAttribute("username");
     QuizService quizService = new QuizService();
     int selectedQuizId = -1;
     if (request.getParameter("selectedQuizId") != null) {

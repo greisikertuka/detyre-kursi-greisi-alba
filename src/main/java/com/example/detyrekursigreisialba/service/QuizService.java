@@ -3,6 +3,7 @@ package com.example.detyrekursigreisialba.service;
 import com.example.detyrekursigreisialba.model.*;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -120,12 +121,13 @@ public class QuizService {
         int generatedResultId = -1;
         try (Connection connection = DatabaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO results (quiz_id, username) VALUES (?, ?);",
+                     "INSERT INTO results (quiz_id, username, timestamp) VALUES (?, ?, ?);",
                      Statement.RETURN_GENERATED_KEYS
              )
         ) {
             preparedStatement.setInt(1, result.getQuizId());
             preparedStatement.setString(2, result.getUsername());
+            preparedStatement.setDate(3, Date.valueOf(LocalDate.now()));
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -139,7 +141,7 @@ public class QuizService {
         return generatedResultId;
     }
 
-    public void saveUserQuizResults(Result result, List<UserAnswer> userAnswers) {
+    public int saveUserQuizResults(Result result, List<UserAnswer> userAnswers) {
         int resultId = saveResult(result);
         try (Connection connection = DatabaseManager.getConnection()) {
             String sql = "INSERT INTO user_answers (result_id, question_id, option_id) VALUES (?, ?, ?)";
@@ -155,6 +157,7 @@ public class QuizService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return resultId;
     }
 
     public List<Question> initializeQuestions(int questionsCount, int optionsCount) {
@@ -216,5 +219,95 @@ public class QuizService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Result getResultWithAnswers(String resultId) {
+        Result result = new Result();
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM results WHERE id = ?")
+        ) {
+            preparedStatement.setInt(1, Integer.parseInt(resultId));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    int quizId = resultSet.getInt("quiz_id");
+                    String username = resultSet.getString("username");
+                    Date timestamp = resultSet.getDate("timestamp");
+                    result = new Result(quizId, username, new ArrayList<>(), timestamp);
+                    List<UserAnswer> answers = getUserAnswersForQuiz(resultId);
+                    result.setUserAnswers(answers);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private List<UserAnswer> getUserAnswersForQuiz(String resultId) {
+        List<UserAnswer> answers = new ArrayList<>();
+        String sql = "SELECT a.id, a.question_id, a.option_id, q.name AS question_name, o.value AS option_name, o.is_answer AS is_answer " +
+                "FROM user_answers a " +
+                "JOIN questions q ON a.question_id = q.id " +
+                "JOIN options o ON a.option_id = o.id " +
+                "WHERE a.result_id = ?";
+
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, Integer.parseInt(resultId));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    int questionId = resultSet.getInt("question_id");
+                    int optionId = resultSet.getInt("option_id");
+                    String questionName = resultSet.getString("question_name");
+                    String optionName = resultSet.getString("option_name");
+                    boolean isAnswer = resultSet.getBoolean("is_answer");
+
+                    UserAnswer answer = new UserAnswer(Integer.parseInt(resultId), questionId, optionId);
+                    answer.setId(id);
+                    answer.setQuestionName(questionName);
+                    answer.setOptionName(optionName);
+                    answer.setAnswer(isAnswer);
+                    answers.add(answer);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return answers;
+    }
+
+    public List<Result> getAllResults(String username) {
+        List<Result> results = new ArrayList<>();
+        String sql = "SELECT r.quiz_id, r.timestamp, q.name AS quiz_name " +
+                "FROM results r " +
+                "JOIN quizzes q ON r.quiz_id = q.id " +
+                "WHERE r.username = ?";
+
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, username);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    int quiz_id = resultSet.getInt("quiz_id");
+                    Date timestamp = resultSet.getDate("timestamp");
+                    String quiz_name = resultSet.getString("quiz_name");
+                    Result result = new Result();
+                    result.setQuizId(quiz_id);
+                    result.setTimestamp(timestamp);
+                    result.setQuizName(quiz_name);
+                    results.add(result);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
     }
 }
