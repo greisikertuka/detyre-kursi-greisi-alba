@@ -7,7 +7,7 @@
     <title>Logout</title>
 </head>
 <body>
-<div class="container">
+<div class="container mt-5">
     <h2>Logout Successful</h2>
     <p>Thank you for using our application. You have been successfully logged out.</p>
     <p><a href="index.jsp" class="btn btn-secondary">Back</a></p>
