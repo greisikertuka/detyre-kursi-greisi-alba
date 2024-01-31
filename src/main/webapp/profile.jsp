@@ -4,7 +4,6 @@
     String id = (String) session.getAttribute("id");
     String username = (String) session.getAttribute("username");
     String email = (String) session.getAttribute("email");
-    String role = (String) session.getAttribute("role");
     if (!loggedIn) {
         response.sendRedirect("index.jsp");
     }

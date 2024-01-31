@@ -13,13 +13,14 @@
 %>
 <div class="container mt-5">
     <p><a href="dashboard.jsp" class="btn btn-secondary">Back</a></p>
-    <h2>My Quizzes</h2>
+    <h2>History</h2>
     <table class="table">
         <thead>
         <tr>
             <th scope="col">Quiz Name</th>
             <th scope="col">Date</th>
             <th scope="col">Score</th>
+            <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +30,13 @@
             </td>
             <td><%=result.getTimestamp()%>
             </td>
-            <td><%=45%>%</td>
+            <td><%=(result.getScore() * 100 + "     ").substring(0, 5)%>%</td>
+            <td>
+                <form action="result.jsp" method="post">
+                    <input type="hidden" name="resultId" value="<%=result.getId()%>">
+                    <button type="submit" class="btn btn-outline-dark">Details</button>
+                </form>
+            </td>
         </tr>
         <%}%>
         </tbody>

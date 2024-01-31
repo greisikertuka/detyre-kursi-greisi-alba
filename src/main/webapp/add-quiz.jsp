@@ -1,7 +1,6 @@
 <%@ include file="common.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    String role = (String) session.getAttribute("role");
     if (!loggedIn) {
         response.sendRedirect("index.jsp");
     } else if (!role.equals("ADMIN")) {

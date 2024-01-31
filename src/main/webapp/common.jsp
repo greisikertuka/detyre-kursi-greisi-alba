@@ -4,6 +4,7 @@
 <%
     session = request.getSession();
     boolean loggedIn = !Objects.isNull(session.getAttribute("username"));
+    String role = (String) session.getAttribute("role");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,9 +21,17 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <header class="bg-dark p-2">
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <a class="navbar-brand" href="dashboard.jsp">Quizzes Online</a>
+        <a class="navbar-brand" href="dashboard.jsp">Quizzes</a>
         <%if (loggedIn) { %>
         <ul class="navbar-nav ml-auto">
+            <%if (role.equals("ADMIN")) { %>
+            <li class="nav-item">
+                <a class="nav-link" href="add-quiz.jsp"><i class="fas fa-plus"></i> Add Quiz</a>
+            </li>
+            <%}%>
+            <li class="nav-item">
+                <a class="nav-link" href="history.jsp"><i class="fas fa-history"></i> History</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="profile.jsp"><i class="fas fa-user"></i> Profile</a>
             </li>

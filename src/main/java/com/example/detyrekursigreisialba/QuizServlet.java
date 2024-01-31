@@ -55,6 +55,7 @@ public class QuizServlet extends HttpServlet {
                 UserAnswer userAnswer = new UserAnswer();
                 userAnswer.setOptionId(selectedOption.getId());
                 userAnswer.setQuestionId(question.getId());
+                userAnswer.setAnswer(selectedOption.isCorrectAnswer());
                 userAnswers.add(userAnswer);
             }
         }
@@ -62,6 +63,6 @@ public class QuizServlet extends HttpServlet {
         if (!userAnswers.isEmpty()) {
             resultId = quizService.saveUserQuizResults(result, userAnswers);
         }
-        response.sendRedirect("quiz-results.jsp?resultId=" + resultId);
+        response.sendRedirect("result.jsp?resultId=" + resultId);
     }
 }

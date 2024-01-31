@@ -141,18 +141,38 @@ public class QuizService {
         return generatedResultId;
     }
 
+    private void setScoreForResult(int resultId, Connection connection, double score) {
+        String sql = "UPDATE results SET score = ? WHERE id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(sql);
+            statement.setDouble(1, score);
+            statement.setInt(2, resultId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public int saveUserQuizResults(Result result, List<UserAnswer> userAnswers) {
         int resultId = saveResult(result);
+        double score = 0;
         try (Connection connection = DatabaseManager.getConnection()) {
             String sql = "INSERT INTO user_answers (result_id, question_id, option_id) VALUES (?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 for (UserAnswer userAnswer : userAnswers) {
+                    System.out.println(userAnswer.isAnswer());
+                    if (userAnswer.isAnswer()) {
+                        score += 1;
+                    }
                     statement.setInt(1, resultId);
                     statement.setInt(2, userAnswer.getQuestionId());
                     statement.setInt(3, userAnswer.getOptionId());
                     statement.addBatch();
                 }
                 statement.executeBatch();
+                score = score / userAnswers.size();
+                setScoreForResult(resultId, connection, score);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -232,7 +252,9 @@ public class QuizService {
                     int quizId = resultSet.getInt("quiz_id");
                     String username = resultSet.getString("username");
                     Date timestamp = resultSet.getDate("timestamp");
+                    double score = resultSet.getDouble("score");
                     result = new Result(quizId, username, new ArrayList<>(), timestamp);
+                    result.setScore(score);
                     List<UserAnswer> answers = getUserAnswersForQuiz(resultId);
                     result.setUserAnswers(answers);
                 }
@@ -282,7 +304,7 @@ public class QuizService {
 
     public List<Result> getAllResults(String username) {
         List<Result> results = new ArrayList<>();
-        String sql = "SELECT r.quiz_id, r.timestamp, q.name AS quiz_name " +
+        String sql = "SELECT r.id, r.quiz_id, r.timestamp, r.score, q.name AS quiz_name " +
                 "FROM results r " +
                 "JOIN quizzes q ON r.quiz_id = q.id " +
                 "WHERE r.username = ?";
@@ -295,12 +317,16 @@ public class QuizService {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
                     int quiz_id = resultSet.getInt("quiz_id");
                     Date timestamp = resultSet.getDate("timestamp");
+                    double score = resultSet.getDouble("score");
                     String quiz_name = resultSet.getString("quiz_name");
                     Result result = new Result();
+                    result.setId(id);
                     result.setQuizId(quiz_id);
                     result.setTimestamp(timestamp);
+                    result.setScore(score);
                     result.setQuizName(quiz_name);
                     results.add(result);
                 }
@@ -309,5 +335,33 @@ public class QuizService {
             e.printStackTrace();
         }
         return results;
+    }
+
+    public boolean deleteQuizById(int quizId) {
+        try (Connection connection = DatabaseManager.getConnection()) {
+            deleteUserAnswersAndResults(connection, quizId);
+            String deleteQuizSQL = "DELETE FROM quizzes WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuizSQL)) {
+                preparedStatement.setInt(1, quizId);
+                int rowsAffected = preparedStatement.executeUpdate();
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void deleteUserAnswersAndResults(Connection connection, int quizId) throws SQLException {
+        String deleteUserAnswersSql = "DELETE FROM user_answers WHERE result_id IN (SELECT id FROM results WHERE quiz_id = ?)";
+        try (PreparedStatement deleteUserAnswersStatement = connection.prepareStatement(deleteUserAnswersSql)) {
+            deleteUserAnswersStatement.setInt(1, quizId);
+            deleteUserAnswersStatement.executeUpdate();
+        }
+        String deleteResultsSql = "DELETE FROM results WHERE quiz_id = ?";
+        try (PreparedStatement deleteResultsStatement = connection.prepareStatement(deleteResultsSql)) {
+            deleteResultsStatement.setInt(1, quizId);
+            deleteResultsStatement.executeUpdate();
+        }
     }
 }

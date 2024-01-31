@@ -4,11 +4,15 @@ import java.util.Date;
 import java.util.List;
 
 public class Result {
+
+    private int id;
     private int quizId;
     private String username;
     private List<UserAnswer> userAnswers;
 
     private Date timestamp;
+
+    private double score;
     private String quiz_name;
 
     public Result(int quizId, String username, List<UserAnswer> answers, Date timestamp) {
@@ -18,7 +22,32 @@ public class Result {
         this.timestamp = timestamp;
     }
 
-    public Result() {}
+    public Result() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public String getQuiz_name() {
+        return quiz_name;
+    }
+
+    public void setQuiz_name(String quiz_name) {
+        this.quiz_name = quiz_name;
+    }
 
     public Date getTimestamp() {
         return timestamp;

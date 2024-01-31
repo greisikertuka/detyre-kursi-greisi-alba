@@ -45,5 +45,5 @@
         <br>
         <%}%>
     </div>
-    <a href="my-quizzes.jsp" class="btn btn-dark">My Quizzes</a>
+    <a href="history.jsp" class="btn btn-dark">Quizzes History</a>
 </div>

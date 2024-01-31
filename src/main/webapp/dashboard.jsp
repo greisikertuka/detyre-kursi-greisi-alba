@@ -5,7 +5,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
-    String role = (String) session.getAttribute("role");
     if (!loggedIn) {
         response.sendRedirect("index.jsp");
     }
@@ -41,8 +40,17 @@
                          alt=""/>
                 </div>
                 <br>
-                <a class="btn btn-dark" href="quiz.jsp?selectedQuizId=<%=quiz.getId()%>">Start Quiz
+                <span class="row">
+                    <a class="btn btn-dark ml-2" href="quiz.jsp?selectedQuizId=<%=quiz.getId()%>">Start Quiz
                 </a>
+                <%if ("ADMIN".equals(role)) { %>
+                <form action="delete-quiz" method="post">
+                    <input type="hidden" name="quizId" value="<%=quiz.getId()%>">
+                    <button type="submit" class="btn btn-danger mx-2">Delete</button>
+                </form>
+                <%}%>
+                </span>
+
             </div>
         </div>
         <% } %>

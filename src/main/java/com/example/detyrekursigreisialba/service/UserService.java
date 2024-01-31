@@ -54,24 +54,9 @@ public class UserService {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, newPassword);
                 statement.setInt(2, userId);
-                int rowsAffected = statement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean saveProfileChanges(int id, User newUser) throws SQLException {
-        Connection connection = DatabaseManager.getConnection();
-        String sql = "UPDATE users " +
-                "SET username = ?, " +
-                "email = ? " +
-                "WHERE id = ?;";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, newUser.getUsername());
-        statement.setString(2, newUser.getEmail());
-        statement.setInt(3, id);  // Use setInt for the ID
-        statement.executeUpdate();
-        return true;
     }
 }
