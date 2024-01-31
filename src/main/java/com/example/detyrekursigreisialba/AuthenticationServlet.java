@@ -89,7 +89,6 @@ public class AuthenticationServlet extends HttpServlet {
 
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        // Authentication successful
                         HttpSession session = request.getSession(true);
                         session.setAttribute("id", "" + resultSet.getInt("id"));
                         session.setAttribute("username", username);
@@ -97,7 +96,6 @@ public class AuthenticationServlet extends HttpServlet {
                         session.setAttribute("role", resultSet.getString("role"));
                         response.sendRedirect("dashboard.jsp");
                     } else {
-                        // Authentication failed
                         response.sendRedirect("login.jsp?error=1");
                     }
                 }
