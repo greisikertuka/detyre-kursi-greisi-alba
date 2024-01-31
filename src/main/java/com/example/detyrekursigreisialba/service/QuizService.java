@@ -339,7 +339,7 @@ public class QuizService {
 
     public boolean deleteQuizById(int quizId) {
         try (Connection connection = DatabaseManager.getConnection()) {
-            deleteUserAnswersAndResults(connection, quizId);
+            deleteQuizData(connection, quizId);
             String deleteQuizSQL = "DELETE FROM quizzes WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuizSQL)) {
                 preparedStatement.setInt(1, quizId);
@@ -352,16 +352,30 @@ public class QuizService {
         return false;
     }
 
-    private void deleteUserAnswersAndResults(Connection connection, int quizId) throws SQLException {
+    private void deleteQuizData(Connection connection, int quizId) throws SQLException {
         String deleteUserAnswersSql = "DELETE FROM user_answers WHERE result_id IN (SELECT id FROM results WHERE quiz_id = ?)";
         try (PreparedStatement deleteUserAnswersStatement = connection.prepareStatement(deleteUserAnswersSql)) {
             deleteUserAnswersStatement.setInt(1, quizId);
             deleteUserAnswersStatement.executeUpdate();
         }
+
         String deleteResultsSql = "DELETE FROM results WHERE quiz_id = ?";
         try (PreparedStatement deleteResultsStatement = connection.prepareStatement(deleteResultsSql)) {
             deleteResultsStatement.setInt(1, quizId);
             deleteResultsStatement.executeUpdate();
         }
+
+        String deleteOptionsSql = "DELETE FROM options WHERE question_id IN (SELECT id FROM questions WHERE quiz_id = ?)";
+        try (PreparedStatement deleteOptionsStatement = connection.prepareStatement(deleteOptionsSql)) {
+            deleteOptionsStatement.setInt(1, quizId);
+            deleteOptionsStatement.executeUpdate();
+        }
+
+        String deleteQuestionsSql = "DELETE FROM questions WHERE quiz_id = ?";
+        try (PreparedStatement deleteQuestionsStatement = connection.prepareStatement(deleteQuestionsSql)) {
+            deleteQuestionsStatement.setInt(1, quizId);
+            deleteQuestionsStatement.executeUpdate();
+        }
     }
+
 }
