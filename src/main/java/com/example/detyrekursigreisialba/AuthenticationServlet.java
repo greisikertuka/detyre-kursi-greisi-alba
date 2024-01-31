@@ -29,8 +29,6 @@ public class AuthenticationServlet extends HttpServlet {
             registerUser(request, response);
         } else if ("login".equals(action)) {
             loginUser(request, response);
-        } else if ("logout".equals(action)) {
-            logoutUser(request, response);
         }
     }
 
@@ -108,14 +106,5 @@ public class AuthenticationServlet extends HttpServlet {
             e.printStackTrace();
             response.sendRedirect("login-failure.jsp");
         }
-    }
-
-    private void logoutUser(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        response.sendRedirect("index.jsp");
     }
 }
